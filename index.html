@@ -281,7 +281,7 @@ function collectForm(){
 }
 
 /* ========================================
-   NEW CHERRY METHOD CORE LOGIC (2026)
+   NEW CHERRY METHOD CORE LOGIC (2026 FIXED)
    ======================================== */
 
 // すべてのエントリーと手入力ユニットから、各人の出演情報をフラットに抽出
@@ -346,7 +346,7 @@ function checkViolations(allEntries) {
     }
   });
 
-  // 3. またぎ演者の相関グラフを作成（同じ複数人ユニットに同居しているまたぎ同士を結ぶ）
+  // 3. 各ユニット内にまたぎ演者（出演2回の人）が複数人同居していないかチェック
   const unitMatagis = new Map(); // unitId -> Set(names)
   apps.forEach((userApps, name) => {
     userApps.forEach(app => {
@@ -357,39 +357,14 @@ function checkViolations(allEntries) {
     });
   });
 
-  const matagiGraph = new Map(); // name -> Set(neighbors)
-  unitMatagis.forEach((mSet) => {
-    const matagis = Array.from(mSet);
-    for (let i = 0; i < matagis.length; i++) {
-      for (let j = i + 1; j < matagis.length; j++) {
-        const u = matagis[i];
-        const v = matagis[j];
-        if (!matagiGraph.has(u)) matagiGraph.set(u, new Set());
-        if (!matagiGraph.has(v)) matagiGraph.set(v, new Set());
-        matagiGraph.get(u).add(v);
-        matagiGraph.get(v).add(u);
-      }
+  unitMatagis.forEach((mSet, unitId) => {
+    if (mSet.size >= 2) {
+      const matagis = Array.from(mSet);
+      violations.push({
+        name: matagis[0],
+        reason: `チェリー方式に抵触：同じユニット内に、すでに2回出演しているメンバー（${matagis.join('、')}）が複数含まれるため、これ以上のエントリーはできません。`
+      });
     }
-  });
-
-  // 4. 数珠繋ぎの3連続またぎ（X ── Y ── Z）を検出
-  matagiGraph.forEach((neighbors, x) => {
-    neighbors.forEach(y => {
-      const yNeighbors = matagiGraph.get(y);
-      if (yNeighbors) {
-        yNeighbors.forEach(z => {
-          if (z !== x) {
-            // 重複メッセージを防ぐためにxとzの順序を固定
-            if (x < z) {
-              violations.push({
-                name: y,
-                reason: `チェリー方式（重複の3連鎖）に抵触：[ ${x} ─ ${y} ─ ${z} ] の関係性で3連続のまたぎが発生するため出演できません。`
-              });
-            }
-          }
-        });
-      }
-    });
   });
 
   return violations;
@@ -416,14 +391,14 @@ function calcBlockedNames(){
     const testEntries = [...entries, fakeEntry];
     const violations = checkViolations(testEntries);
     
-    // 自分に関わる違反、または自分が原因で3連鎖が起きた場合はブロック対象
+    // 自分に関わる違反、または自分が原因で連鎖が起きた場合はブロック対象
     const myViolation = violations.find(v => v.name === name || v.reason.includes(name));
     if (myViolation) {
       let reason = "";
       if (userApps.length >= 2) {
         reason = "すでに2つの枠に出演しているため";
       } else {
-        reason = "これ以上エントリーするとチェリー方式（3連続またぎ）に抵触するため";
+        reason = "これ以上エントリーするとチェリー方式に抵触するため";
       }
       blocked.set(name, reason);
     }
@@ -433,7 +408,6 @@ function calcBlockedNames(){
 }
 
 function checkCanEnter(newMemberDetails){
-  // doCheck側で一括シミュレーションを行うため、ここでは空の配列を返す形でラップします
   return [];
 }
 
@@ -456,7 +430,6 @@ function doCheck(){
 
   if(violations.length){
     box.className = 'result-box ng';
-    // ユニークなエラーメッセージだけを抽出して表示
     const uniqueReasons = Array.from(new Set(violations.map(v => v.reason)));
     box.innerHTML = `
       <div class="icon">🚫</div>
