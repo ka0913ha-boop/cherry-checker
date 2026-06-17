@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>チェリー方式チェッカー (シンプル学籍番号版)</title>
+<title>チェリー方式チェッカー (完全版)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -87,10 +87,6 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .no-data{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
 .clear-row{display:flex;justify-content:flex-end;margin-bottom:10px}
 
-/* RULE BOX */
-.rule-box{background:#fff5f6;border:1px solid #ffd0d9;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.8}
-.rule-box strong{color:var(--text)}
-
 @media(max-width:480px){.fmt-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
@@ -98,7 +94,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 <header>
   <div class="cherry">🍒</div>
-  <div class="tag">CHERRY METHOD (SIMPLE VER.)</div>
+  <div class="tag">CHERRY METHOD (FINAL VER.)</div>
   <h1>チェリー方式チェッカー</h1>
   <p class="sub">エントリーを入力していくだけで、学籍番号をベースにチェリー方式を自動判定します。</p>
 </header>
@@ -145,7 +141,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 
 <script>
-const KEY = 'cherry_student_id_v2'; // キーをリフレッシュしてバグ防止
+const KEY = 'cherry_student_id_v3'; // 重複チェック追加に伴いキーを変更してクリーンに
 let entries = [];
 
 function save(){ localStorage.setItem(KEY, JSON.stringify(entries)) }
@@ -202,7 +198,7 @@ function collectForm(){
 
 // 学籍番号ベースで出演履歴を完全にフラットにする
 function getAllAppearances(allEntries) {
-  const apps = new Map(); // code -> { name, list: [ { id, mates: [{code, name}] } ] }
+  const apps = new Map();
 
   allEntries.forEach(e => {
     const entryMembers = e.memberDetails.filter(m => m.code && m.name);
@@ -210,10 +206,8 @@ function getAllAppearances(allEntries) {
       if (!apps.has(m.code)) apps.set(m.code, { name: m.name, list: [] });
       
       const userObj = apps.get(m.code);
-      // 同じエントリーIDの重複カウントを防ぐ
       if (userObj.list.some(a => a.id === e.id)) return;
 
-      // 自分以外のメンバー（相方たち）
       const mates = entryMembers.filter(o => o.code !== m.code).map(o => ({ code: o.code, name: o.name }));
       userObj.list.push({ id: e.id, mates });
     });
@@ -224,22 +218,19 @@ function getAllAppearances(allEntries) {
 
 // 出演不可者をリアルタイムで計算
 function calcBlockedNames(){
-  const blocked = new Map(); // code -> { name, reason }
+  const blocked = new Map();
   const apps = getAllAppearances(entries);
   
   apps.forEach((userData, performerCode)=>{
     const userApps = userData.list;
     const performerName = userData.name;
     
-    // 2回以上出演している場合
     if(userApps.length >= 2){
-      // 本人はこれ以上出られない
       blocked.set(performerCode, {
         name: performerName,
         reason: "すでに2つの枠に出演しているため"
       });
       
-      // その人の過去の相方を全員永久ブロック
       userApps.forEach(app=>{
         app.mates.forEach(mate=>{
           if(mate.code !== performerCode){
@@ -260,6 +251,13 @@ function doCheck(){
   const memberDetails = collectForm();
   if(!memberDetails.length){ alert('出演者の「学籍番号」と「お名前」を入力してください。'); return; }
 
+  // 【ユーザーさん提案】同じエントリー内での学籍番号重複エラーチェック
+  const codes = memberDetails.map(m => m.code);
+  if(new Set(codes).size !== codes.length){
+    alert('同じエントリー内に同じ学籍番号が重複して入力されています。');
+    return;
+  }
+
   const validNames = memberDetails.map(m=>m.name);
   const label = (document.getElementById('entryName').value.trim())
     || validNames.join('・')
@@ -267,7 +265,7 @@ function doCheck(){
 
   const box = document.getElementById('resultBox');
 
-  // エントリーボタンを押した瞬間、既存データから「今の出演不可者」を割り出してチェック
+  // チェリー方式による出演不可チェック
   const blocked = calcBlockedNames();
   for(const member of memberDetails){
     if(blocked.has(member.code)){
@@ -284,7 +282,7 @@ function doCheck(){
     }
   }
 
-  // 違反がなければ保存
+  // 保存
   const newEntry = { id: Date.now()+'', label, memberDetails };
   entries.push(newEntry);
   save();
