@@ -7,56 +7,69 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --bg:#0f0f14;--surface:#1a1a24;--card:#22222f;--border:#2e2e40;
-  --accent:#e84a7f;--accent2:#a855f7;--ok:#22c55e;
-  --text:#f0f0f8;--muted:#7070a0;--r:10px;
+  --bg:#fff8f8;
+  --surface:#ffffff;
+  --card:#fff0f3;
+  --border:#ffd0d9;
+  --accent:#d62839;
+  --accent2:#5da84f;
+  --ok:#22c55e;
+  --text:#50242d;
+  --muted:#9a6a73;
+  --r:14px;
 }
+
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px 80px}
 
 header{text-align:center;margin-bottom:36px}
+.cherry{
+  font-size:64px;
+  margin-bottom:8px;
+}
 .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;margin-bottom:10px}
 h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.8}
 
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;max-width:680px;margin-left:auto;margin-right:auto}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;max-width:680px;margin-left:auto;margin-right:auto;box-shadow:0 4px 18px rgba(214,40,57,.08);}
 .panel-title{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
 
 /* FORMAT */
 .fmt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:6px}
 .fmt-btn{padding:12px 4px;border:1.5px solid var(--border);border-radius:8px;background:var(--card);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}
-.fmt-btn:hover{border-color:var(--accent2);color:var(--text)}
-.fmt-btn.active{border-color:var(--accent);background:#2e1a24;color:var(--accent)}
+.fmt-btn:hover{border-color:var(--accent);color:var(--text)}
+.fmt-btn.active{border-color:var(--accent);background:#ffe1e8;color:var(--accent)}
 .fmt-sub{font-size:10px;font-weight:400;color:var(--muted);display:block;margin-top:2px}
 .custom-wrap{display:none;align-items:center;gap:8px;margin-top:10px}
 .custom-wrap.on{display:flex}
 .custom-wrap label{font-size:12px;color:var(--muted)}
 .num-input{width:68px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none}
-.num-input:focus{border-color:var(--accent2)}
+.num-input:focus{border-color:var(--accent)}
 
 /* INPUTS */
 .field-label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block}
 .field-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.15s}
-.field-input:focus{border-color:var(--accent2)}
+.field-input:focus{border-color:var(--accent)}
 .field-input::placeholder{color:var(--muted)}
 
 /* PERFORMER CARDS */
 #performersWrap{margin-top:16px;display:flex;flex-direction:column;gap:14px}
 .perf-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden}
-.perf-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:#1e1e2e}
-.perf-num{width:26px;height:26px;border-radius:50%;background:var(--accent2);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.perf-name-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
-.perf-name-input:focus{border-color:var(--accent2)}
+.perf-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:#fff0f3}
+.perf-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.perf-name-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
+.perf-name-input:focus{border-color:var(--accent)}
 .perf-name-input::placeholder{color:var(--muted);font-weight:400}
 .perf-body{padding:12px 14px}
 
 /* UNIT BLOCKS */
 .teams-section-label{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.6}
-.team-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.team-block{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px}
 .team-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.team-label-badge{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--accent2);background:#1e1a2e;border:1px solid #3a2a5a;border-radius:4px;padding:2px 6px;white-space:nowrap}
+.team-label-badge{font-size:9px;font-weight:700;letter-spacing:.1em;color:#fff;background:var(--accent2);border-radius:4px;padding:2px 6px;white-space:nowrap}
 .team-name-input{flex:1;padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s}
-.team-name-input:focus{border-color:var(--accent2)}
+.team-name-input:focus{border-color:var(--accent)}
 .team-name-input::placeholder{color:var(--muted)}
 .btn-del{border:none;background:transparent;color:var(--muted);font-size:16px;cursor:pointer;padding:2px 5px;border-radius:4px;line-height:1;transition:.12s;flex-shrink:0}
 .btn-del:hover{color:var(--accent)}
@@ -64,7 +77,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .mates-label{font-size:10px;color:var(--muted);margin-bottom:6px;padding-left:2px}
 .mate-row{display:flex;gap:6px;margin-bottom:5px;align-items:center}
 .mate-input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s}
-.mate-input:focus{border-color:var(--accent2)}
+.mate-input:focus{border-color:var(--accent)}
 .mate-input::placeholder{color:var(--muted)}
 
 .btn-add-small{border:1px dashed var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;padding:5px 10px;border-radius:6px;transition:.12s;width:100%;text-align:center}
@@ -73,36 +86,36 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .btn-add-team:hover{border-color:var(--accent2);color:var(--accent2)}
 
 /* PRIMARY BTN */
-.btn-primary{display:block;width:100%;padding:13px;border:none;border-radius:8px;background:#c0346a;color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:18px;letter-spacing:.03em;transition:opacity .15s}
+.btn-primary{display:block;width:100%;padding:13px;border:none;border-radius:8px;background:linear-gradient(135deg,#ff5d73,#d62839);color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:18px;letter-spacing:.03em;transition:opacity .15s}
 .btn-primary:hover{opacity:.88}
 .btn-ghost{padding:5px 11px;border:1.5px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;transition:.15s}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 
 /* RESULT */
 .result-box{border-radius:9px;padding:14px 18px;margin-top:14px;display:none;font-size:13px;line-height:1.8}
-.result-box.ok{display:block;background:#162416;border:1.5px solid var(--ok)}
-.result-box.ng{display:block;background:#2a1420;border:1.5px solid var(--accent)}
+.result-box.ok{display:block;background:#eefbf2;border:1.5px solid var(--ok);color:#1e5e2f;}
+.result-box.ng{display:block;background:#fff0f2;border:1.5px solid var(--accent);color:#d62839;}
 .result-box .icon{font-size:20px;margin-bottom:4px}
 
 /* LIST */
 .entry-list{list-style:none}
 .entry-item{display:flex;align-items:flex-start;gap:10px;padding:13px 0;border-bottom:1px solid var(--border)}
 .entry-item:last-child{border-bottom:none}
-.entry-badge{flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:4px;background:#1e1a2e;color:var(--accent2);margin-top:2px}
+.entry-badge{flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:4px;background:#ffe1e8;color:#d62839;margin-top:2px}
 .entry-info{flex:1;min-width:0}
 .entry-unit{font-weight:700;font-size:14px}
 .entry-names{font-size:12px;color:var(--muted);margin-top:2px}
-.entry-teams{font-size:11px;color:#8866cc;margin-top:2px;word-break:break-all;line-height:1.6}
+.entry-teams{font-size:11px;color:var(--accent2);margin-top:2px;word-break:break-all;line-height:1.6}
 
 /* BLOCKED */
-.blocked-chip{display:inline-flex;flex-direction:column;gap:2px;background:#2a1420;border:1px solid #5a2a3a;border-radius:7px;padding:7px 12px;margin:4px 4px 4px 0;font-size:13px;vertical-align:top}
-.b-name{font-weight:700}
+.blocked-chip{display:inline-flex;flex-direction:column;gap:2px;background:#fff0f2;border:1px solid #ffd0d9;border-radius:7px;padding:7px 12px;margin:4px 4px 4px 0;font-size:13px;vertical-align:top;color:var(--text)}
+.b-name{font-weight:700;color:var(--accent)}
 .b-reason{font-size:11px;color:var(--muted)}
 .no-data{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
 .clear-row{display:flex;justify-content:flex-end;margin-bottom:10px}
 
 /* RULE BOX */
-.rule-box{background:#1a1a2e;border:1px solid #2e2a4e;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.8}
+.rule-box{background:#fff5f6;border:1px solid #ffd0d9;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.8}
 .rule-box strong{color:var(--text)}
 
 @media(max-width:480px){.fmt-grid{grid-template-columns:repeat(2,1fr)}}
@@ -111,12 +124,12 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 <body>
 
 <header>
-  <div class="tag">Cherry Method</div>
+  <div class="cherry">🍒</div>
+  <div class="tag">CHERRY METHOD</div>
   <h1>チェリー方式チェッカー</h1>
   <p class="sub">本名フルネームで登録し、出演可否を自動判定します。</p>
 </header>
 
-<!-- ルール説明 -->
 <div class="panel">
   <div class="rule-box">
     <strong>チェリー方式とは？</strong><br>
@@ -126,7 +139,6 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
   </div>
 </div>
 
-<!-- STEP1: 形式選択 -->
 <div class="panel" id="secFormat">
   <div class="panel-title">Step 1 ／ 出演形式を選択</div>
   <div class="fmt-grid">
@@ -142,7 +154,6 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
   </div>
 </div>
 
-<!-- STEP2: 入力 -->
 <div class="panel" id="secEntry" style="display:none">
   <div class="panel-title">Step 2 ／ 出演者を入力</div>
 
@@ -157,7 +168,11 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
   <div class="result-box" id="resultBox"></div>
 </div>
 
-<!-- 登録済み -->
+<div class="panel">
+  <div class="panel-title">出演不可者（チェリー方式判定）</div>
+  <div id="blockedArea"></div>
+</div>
+
 <div class="panel">
   <div class="panel-title">登録済みエントリー</div>
   <div class="clear-row"><button class="btn-ghost" onclick="clearAll()">すべて削除</button></div>
@@ -165,17 +180,9 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 </div>
 
 
-
 <script>
-/* ========================================
-   DATA MODEL
-   Entry: { id, label, members: string[] }
-   ただし各メンバーが所属チームの情報も必要なので
-   memberDetails: [{ name, teams:[{unitName, mates:[string]}] }]
-   ========================================= */
-
 const KEY = 'cherry3';
-let entries = []; // { id, label, memberDetails:[{name, teams:[{unitName,mates:[]}]}] }
+let entries = [];
 
 function save(){ localStorage.setItem(KEY, JSON.stringify(entries)) }
 function load(){ try{ const r=localStorage.getItem(KEY); if(r) entries=JSON.parse(r) }catch(e){ entries=[] } }
@@ -197,7 +204,7 @@ function onCustomN(){
 }
 
 /* ===== BUILD FORM ===== */
-let _tc = 0; // team id counter
+let _tc = 0;
 function buildForm(n){
   const wrap = document.getElementById('performersWrap');
   wrap.innerHTML = '';
@@ -272,21 +279,9 @@ function collectForm(){
   return result;
 }
 
-/* ========================================
-   チェリー方式 コアロジック
-
-   ルール：
-   - 1人が2つのエントリーに出ることはOK
-   - ある人Xが2つのエントリーに出ている場合
-     → Xの各エントリーでの相方は、追加エントリーに出演不可
-   - つまり blocked = 「すでに2組に出ている人の、その2組それぞれの相方全員」
-   ======================================== */
-
-// 登録済みエントリーから「出演不可者」を計算
-// 返り値: Map<name, reason>
+/* ===== CORE LOGIC ===== */
 function calcBlockedNames(){
-  // 各人が出演しているエントリー一覧を集計
-  const personEntries = new Map(); // name -> [entry, ...]
+  const personEntries = new Map();
 
   entries.forEach(entry=>{
     entry.memberDetails.forEach(md=>{
@@ -298,10 +293,8 @@ function calcBlockedNames(){
 
   const blocked = new Map();
 
-  // 2つ以上のエントリーに出ている人を探す
   personEntries.forEach((entryList, personName)=>{
     if(entryList.length < 2) return;
-    // この人は2組に出ている → 各エントリーの相方が出演不可
     const labels = entryList.map(e=>e.label).join('・');
     entryList.forEach(entry=>{
       const md = entry.memberDetails.find(m=>m.name===personName);
@@ -319,9 +312,7 @@ function calcBlockedNames(){
   return blocked;
 }
 
-/* 新規エントリー候補をチェック */
 function checkCanEnter(newMemberDetails){
-  // 既存エントリーだけでblocked計算（新エントリーは含めない）
   const blocked = calcBlockedNames();
   return newMemberDetails
     .filter(m=>m.name && blocked.has(m.name))
@@ -346,7 +337,7 @@ function doCheck(){
     box.innerHTML = `
       <div class="icon">🚫</div>
       <strong>チェリー方式に抵触しています</strong>
-      <div style="border-top:1px solid #5a2a3a;margin:8px 0"></div>
+      <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
       ${violations.map(v=>`
         <div style="margin-bottom:8px">
           <span style="color:var(--accent);font-weight:700">${v.name}</span> は出演不可<br>
@@ -359,7 +350,7 @@ function doCheck(){
   save();
 
   box.className = 'result-box ok';
-  box.innerHTML = `<div class="icon">✅</div><strong>問題なし！登録しました</strong><br>
+  box.innerHTML = `<div class="icon">🍒</div><strong>問題なし！登録しました</strong><br>
     <span style="font-size:12px;color:var(--muted)">「${label}」を登録しました。</span>`;
 
   setTimeout(()=>{
@@ -405,6 +396,7 @@ function renderList(){
 function renderBlocked(){
   const blocked = calcBlockedNames();
   const el = document.getElementById('blockedArea');
+  if(!el) return;
   if(!blocked.size){
     el.innerHTML='<p style="font-size:13px;color:var(--muted)">現在、出演不可者はいません。</p>';
     return;
