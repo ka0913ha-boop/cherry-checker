@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>チェリー方式チェッカー</title>
+<title>チェリー方式チェッカー (学籍番号版)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -24,15 +24,12 @@
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px 80px}
 
 header{text-align:center;margin-bottom:36px}
-.cherry{
-  font-size:64px;
-  margin-bottom:8px;
-}
+.cherry{font-size:64px;margin-bottom:8px}
 .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;margin-bottom:10px}
 h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.8}
 
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;max-width:680px;margin-left:auto;margin-right:auto;box-shadow:0 4px 18px rgba(214,40,57,.08);}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;max-width:680px;margin-left:auto;margin-right:auto;box-shadow:0 4px 18px rgba(214,40,57,.08)}
 .panel-title{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
 
 /* FORMAT */
@@ -56,11 +53,12 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 /* PERFORMER CARDS */
 #performersWrap{margin-top:16px;display:flex;flex-direction:column;gap:14px}
 .perf-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden}
-.perf-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:#fff0f3}
+.perf-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:#fff0f3;flex-wrap:wrap}
 .perf-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.perf-name-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
-.perf-name-input:focus{border-color:var(--accent)}
-.perf-name-input::placeholder{color:var(--muted);font-weight:400}
+.perf-code-input{width:110px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
+.perf-name-input{flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
+.perf-code-input:focus, .perf-name-input:focus{border-color:var(--accent)}
+.perf-code-input::placeholder, .perf-name-input::placeholder{color:var(--muted);font-weight:400}
 .perf-body{padding:12px 14px}
 
 /* UNIT BLOCKS */
@@ -76,9 +74,9 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 .mates-label{font-size:10px;color:var(--muted);margin-bottom:6px;padding-left:2px}
 .mate-row{display:flex;gap:6px;margin-bottom:5px;align-items:center}
-.mate-input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s}
-.mate-input:focus{border-color:var(--accent)}
-.mate-input::placeholder{color:var(--muted)}
+.mate-code-input{width:90px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s}
+.mate-name-input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s}
+.mate-code-input:focus, .mate-name-input:focus{border-color:var(--accent)}
 
 .btn-add-small{border:1px dashed var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;padding:5px 10px;border-radius:6px;transition:.12s;width:100%;text-align:center}
 .btn-add-small:hover{border-color:var(--accent2);color:var(--accent2)}
@@ -93,8 +91,8 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 /* RESULT */
 .result-box{border-radius:9px;padding:14px 18px;margin-top:14px;display:none;font-size:13px;line-height:1.8}
-.result-box.ok{display:block;background:#eefbf2;border:1.5px solid var(--ok);color:#1e5e2f;}
-.result-box.ng{display:block;background:#fff0f2;border:1.5px solid var(--accent);color:#d62839;}
+.result-box.ok{display:block;background:#eefbf2;border:1.5px solid var(--ok);color:#1e5e2f}
+.result-box.ng{display:block;background:#fff0f2;border:1.5px solid var(--accent);color:#d62839}
 .result-box .icon{font-size:20px;margin-bottom:4px}
 
 /* LIST */
@@ -125,17 +123,16 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 <header>
   <div class="cherry">🍒</div>
-  <div class="tag">CHERRY METHOD</div>
+  <div class="tag">CHERRY METHOD (STUDENT ID VER.)</div>
   <h1>チェリー方式チェッカー</h1>
-  <p class="sub">本名フルネームで登録し、出演可否を自動判定します。</p>
+  <p class="sub">学籍番号で重複・連鎖を判定し、お名前を表示します。</p>
 </header>
 
 <div class="panel">
   <div class="rule-box">
-    <strong>チェリー方式とは？</strong><br>
-    A＋B が1組目に登録 → A が C と2組目に登録<br>
-    → <strong>B と C は追加エントリー不可</strong>になります。<br>
-    「すでに2つのエントリーに出演している人の相方たちは出られない」ルールです。
+    <strong>学籍番号での管理について</strong><br>
+    同姓同名による誤判定を防ぐため、裏側の照合はすべて<strong>学籍番号</strong>で行われます。<br>
+    出演不可リストやエントリー一覧には、入力された<strong>名前</strong>が表示されます。
   </div>
 </div>
 
@@ -159,7 +156,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
   <div style="margin-bottom:16px">
     <span class="field-label">エントリー名（コンビ名・ユニット名など、任意）</span>
-    <input type="text" class="field-input" id="entryName" placeholder="例：ミルクボーイ、霜降り明星、かまいたち など">
+    <input type="text" class="field-input" id="entryName" placeholder="例：ミルクボーイ、霜降り明星 など">
   </div>
 
   <div id="performersWrap"></div>
@@ -181,7 +178,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 
 <script>
-const KEY = 'cherry3';
+const KEY = 'cherry_student_id_v1';
 let entries = [];
 
 function save(){ localStorage.setItem(KEY, JSON.stringify(entries)) }
@@ -215,13 +212,13 @@ function buildForm(n){
     card.innerHTML = `
       <div class="perf-header">
         <div class="perf-num">${i+1}</div>
-        <input class="perf-name-input" id="pname_${i}" type="text"
-          placeholder="出演者 ${i+1}｜本名フルネーム（例：駒場孝、内海崇）">
+        <input class="perf-code-input" id="pcode_${i}" type="text" placeholder="学籍番号">
+        <input class="perf-name-input" id="pname_${i}" type="text" placeholder="お名前（例：駒場孝）">
       </div>
       <div class="perf-body">
         <div class="teams-section-label">
           ▸ 他に組んでいるユニットを入力<br>
-          <span style="font-size:10px">ユニット名と相方の本名フルネームを入力してください。複数ユニットあれば「ユニットを追加」。</span>
+          <span style="font-size:10px">別のユニットの「ユニット名」「相方の学籍番号と名前」を入力してください。</span>
         </div>
         <div id="tlist_${i}"></div>
         <button class="btn-add-team" onclick="addTeam(${i})">＋ ユニットを追加</button>
@@ -239,10 +236,10 @@ function addTeam(pi){
   el.innerHTML = `
     <div class="team-row">
       <span class="team-label-badge">ユニット</span>
-      <input class="team-name-input" id="tname_${tid}" type="text" placeholder="ユニット名（例：ミルクボーイ、霜降り明星）">
+      <input class="team-name-input" id="tname_${tid}" type="text" placeholder="ユニット名（例：ミルクボーイ）">
       <button class="btn-del" onclick="document.getElementById('tb_${tid}').remove()">×</button>
     </div>
-    <div class="mates-label">相方・メンバー（本名フルネーム）</div>
+    <div class="mates-label">相方・メンバー</div>
     <div id="mates_${tid}"></div>
     <button class="btn-add-small" onclick="addMate('${tid}')">＋ メンバーを追加</button>`;
   wrap.appendChild(el);
@@ -257,7 +254,8 @@ function addMate(tid){
   row.className = 'mate-row';
   row.id = `mr_${mid}`;
   row.innerHTML = `
-    <input class="mate-input" type="text" placeholder="相方の本名フルネーム（例：今田耕司、東野幸治）">
+    <input class="mate-code-input" type="text" placeholder="学籍番号">
+    <input class="mate-name-input" type="text" placeholder="相方の名前">
     <button class="btn-del" onclick="document.getElementById('mr_${mid}').remove()">×</button>`;
   wrap.appendChild(row);
 }
@@ -265,55 +263,68 @@ function addMate(tid){
 /* ===== COLLECT FORM ===== */
 function collectForm(){
   const result = [];
-  for(let i=0;i<curCount;i++){
+  for(let i=0; i<curCount; i++){
+    const code = (document.getElementById(`pcode_${i}`)?.value||'').trim();
     const name = (document.getElementById(`pname_${i}`)?.value||'').trim();
-    if(!name) continue;
+    if(!code || !name) continue;
+
     const teamBlocks = [...(document.getElementById(`tlist_${i}`)?.querySelectorAll('.team-block')||[])];
     const teams = teamBlocks.map(tb=>{
       const unitName = (tb.querySelector('.team-name-input')?.value||'').trim();
-      const mates = [...tb.querySelectorAll('.mate-input')]
-        .map(el=>el.value.trim()).filter(Boolean);
-      return {unitName, mates};
-    }).filter(t=>t.unitName||t.mates.length);
-    result.push({name, teams});
+      const mateRows = [...tb.querySelectorAll('.mate-row')];
+      const mates = mateRows.map(row => {
+        const mcode = (row.querySelector('.mate-code-input')?.value||'').trim();
+        const mname = (row.querySelector('.mate-name-input')?.value||'').trim();
+        return { code: mcode, name: mname };
+      }).filter(m => m.code && m.name);
+      
+      return { unitName, mates };
+    }).filter(t => t.unitName || t.mates.length);
+
+    result.push({ code, name, teams });
   }
   return result;
 }
 
 /* ========================================
-   NEW CHERRY METHOD CORE LOGIC (2026 FIXED)
+   CHERRY METHOD CORE LOGIC (STUDENT ID VER.)
    ======================================== */
 
-// すべてのエントリーと手入力ユニットから、各人の出演情報をフラットに抽出
+// 学籍番号(code)をキーとして、全出演情報をフラットに抽出
 function getAllAppearances(allEntries) {
-  const apps = new Map(); // name -> [ { id, isGroup, mates: [] } ]
+  const apps = new Map(); // code -> { name, list: [ { id, isGroup, mates: [{code, name}] } ] }
 
-  function addApp(name, id, isGroup, mates) {
-    if (!name) return;
-    if (!apps.has(name)) apps.set(name, []);
-    if (apps.get(name).some(a => a.id === id)) return;
-    apps.get(name).push({ id, isGroup, mates });
+  function addApp(code, name, id, isGroup, mates) {
+    if (!code) return;
+    if (!apps.has(code)) apps.set(code, { name: name, list: [] });
+    const userObj = apps.get(code);
+    if (userObj.list.some(a => a.id === id)) return;
+    userObj.list.push({ id, isGroup, mates });
   }
 
   allEntries.forEach(e => {
     // 1. メインのエントリー
-    const entryNames = e.memberDetails.map(m => m.name).filter(Boolean);
-    const isGroup = entryNames.length >= 2;
-    entryNames.forEach(name => {
-      const mates = entryNames.filter(n => n !== name);
-      addApp(name, 'entry_' + e.id, isGroup, mates);
+    const entryMembers = e.memberDetails.filter(m => m.code && m.name);
+    const isGroup = entryMembers.length >= 2;
+    entryMembers.forEach(m => {
+      const mates = entryMembers.filter(o => o.code !== m.code).map(o => ({ code: o.code, name: o.name }));
+      addApp(m.code, m.name, 'entry_' + e.id, isGroup, mates);
     });
 
     // 2. 各メンバーの「他に組んでいるユニット(teams)」
     e.memberDetails.forEach(md => {
-      if (!md.name || !md.teams) return;
+      if (!md.code || !md.name || !md.teams) return;
       md.teams.forEach((t, idx) => {
-        const teamNames = [md.name, ...t.mates].filter(Boolean);
-        if (teamNames.length >= 2) {
-          const teamId = 'team_' + e.id + '_' + md.name + '_' + idx;
-          teamNames.forEach(name => {
-            const mates = teamNames.filter(n => n !== name);
-            addApp(name, teamId, true, mates);
+        const teamMembers = [
+          { code: md.code, name: md.name },
+          ...t.mates
+        ].filter(m => m.code && m.name);
+
+        if (teamMembers.length >= 2) {
+          const teamId = 'team_' + e.id + '_' + md.code + '_' + idx;
+          teamMembers.forEach(m => {
+            const mates = teamMembers.filter(o => o.code !== m.code);
+            addApp(m.code, m.name, teamId, true, mates);
           });
         }
       });
@@ -323,25 +334,31 @@ function getAllAppearances(allEntries) {
   return apps;
 }
 
-// 登録済みデータから「出演不可者」をリアルタイム計算
+// 学籍番号ベースで「出演不可者」をリアルタイム計算
 function calcBlockedNames(){
-  const blocked = new Map();
+  const blocked = new Map(); // code -> { name, reason }
   const apps = getAllAppearances(entries);
   
-  apps.forEach((userApps, performer)=>{
-    // 2回以上出演が確定している人を対象にする
+  apps.forEach((userData, performerCode)=>{
+    const userApps = userData.list;
+    const performerName = userData.name;
+    
+    // 2回以上出演が確定している場合
     if(userApps.length >= 2){
-      // 2回出ている本人も、3回目は出られないのでブロック
-      blocked.set(performer, "すでに2つの枠に出演しているため");
+      // 本人ブロック
+      blocked.set(performerCode, {
+        name: performerName,
+        reason: "すでに2つの枠に出演しているため"
+      });
       
-      // その人の相方（同じユニットのメンバー）を全員永久ブロック
+      // その人の相方を全員永久ブロック
       userApps.forEach(app=>{
         app.mates.forEach(mate=>{
-          if(mate !== performer){
-            blocked.set(
-              mate,
-              `${performer} が2回出演しているため`
-            );
+          if(mate.code !== performerCode){
+            blocked.set(mate.code, {
+              name: mate.name,
+              reason: `${performerName} が2回出演しているため`
+            });
           }
         });
       });
@@ -350,33 +367,30 @@ function calcBlockedNames(){
   return blocked;
 }
 
-function checkCanEnter(newMemberDetails){
-  return [];
-}
-
 /* ===== CHECK & REGISTER ===== */
 function doCheck(){
   const memberDetails = collectForm();
-  const validNames = memberDetails.map(m=>m.name).filter(Boolean);
-  if(!validNames.length){ alert('出演者の名前を入力してください。'); return; }
+  if(!memberDetails.length){ alert('出演者の「学籍番号」と「お名前」を正しく入力してください。'); return; }
 
+  const validNames = memberDetails.map(m=>m.name);
   const label = (document.getElementById('entryName').value.trim())
     || validNames.join('・')
     || `エントリー${entries.length+1}`;
 
   const box = document.getElementById('resultBox');
 
-  // 【出演不可者リスト方式】での即時判定
+  // 【出演不可者リスト方式】での即時判定（学籍番号で照合）
   const blocked = calcBlockedNames();
   for(const member of memberDetails){
-    if(blocked.has(member.name)){
+    if(blocked.has(member.code)){
+      const info = blocked.get(member.code);
       box.className = 'result-box ng';
       box.innerHTML = `
         <div class="icon">🚫</div>
         <strong>出演できません</strong>
         <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
         <div style="margin-bottom:8px; font-size:12px;">
-          <span style="color:var(--accent); font-weight:700">• 判定NG：</span>${member.name} は ${blocked.get(member.name)}
+          <span style="color:var(--accent); font-weight:700">• 判定NG：</span>${info.name} さん（学籍番号:${member.code}）は ${info.reason}
         </div>`;
       return;
     }
@@ -413,11 +427,14 @@ function renderList(){
   const el = document.getElementById('entryList');
   if(!entries.length){ el.innerHTML='<li class="no-data">まだエントリーがありません</li>'; return; }
   el.innerHTML = entries.map(e=>{
-    const n = e.memberDetails.filter(m=>m.name).length;
-    const names = e.memberDetails.filter(m=>m.name).map(m=>m.name).join('・');
-    const teamDesc = e.memberDetails.filter(m=>m.name&&m.teams.length).map(m=>{
-      return m.teams.map(t=>`${m.name}：${t.unitName||'チーム'}（${t.mates.join('、')||'—'}）`).join(' / ');
+    const validMembers = e.memberDetails.filter(m=>m.code && m.name);
+    const n = validMembers.length;
+    const names = validMembers.map(m=>m.name).join('・');
+    
+    const teamDesc = validMembers.filter(m=>m.teams && m.teams.length).map(m=>{
+      return m.teams.map(t=>`${m.name}：${t.unitName||'チーム'}（${t.mates.map(o=>o.name).join('、')||'—'}）`).join(' / ');
     }).join(' ｜ ');
+    
     return `
       <li class="entry-item">
         <span class="entry-badge">${fmtLabel(n)}</span>
@@ -441,10 +458,10 @@ function renderBlocked(){
   }
   el.innerHTML = `
     <p style="font-size:11px;color:var(--muted);margin-bottom:10px">ルール上、これ以上の追加エントリーができない方々です。</p>
-    ${[...blocked.entries()].map(([name,reason])=>`
+    ${[...blocked.values()].map(info=>`
       <div class="blocked-chip">
-        <span class="b-name">🚫 ${name}</span>
-        <span class="b-reason">${reason}</span>
+        <span class="b-name">🚫 ${info.name}</span>
+        <span class="b-reason">${info.reason}</span>
       </div>`).join('')}`;
 }
 
