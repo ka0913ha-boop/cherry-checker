@@ -267,6 +267,7 @@ function collectForm(){
   const result = [];
   for(let i=0;i<curCount;i++){
     const name = (document.getElementById(`pname_${i}`)?.value||'').trim();
+    if(!name) continue;
     const teamBlocks = [...(document.getElementById(`tlist_${i}`)?.querySelectorAll('.team-block')||[])];
     const teams = teamBlocks.map(tb=>{
       const unitName = (tb.querySelector('.team-name-input')?.value||'').trim();
@@ -279,44 +280,161 @@ function collectForm(){
   return result;
 }
 
-/* ===== CORE LOGIC ===== */
-function calcBlockedNames(){
-  const personEntries = new Map();
+/* ========================================
+   NEW CHERRY METHOD CORE LOGIC (2026)
+   ======================================== */
 
-  entries.forEach(entry=>{
-    entry.memberDetails.forEach(md=>{
-      if(!md.name) return;
-      if(!personEntries.has(md.name)) personEntries.set(md.name,[]);
-      personEntries.get(md.name).push(entry);
+// すべてのエントリーと手入力ユニットから、各人の出演情報をフラットに抽出
+function getAllAppearances(allEntries) {
+  const apps = new Map(); // name -> [ { id, isGroup, mates: [] } ]
+
+  function addApp(name, id, isGroup, mates) {
+    if (!name) return;
+    if (!apps.has(name)) apps.set(name, []);
+    if (apps.get(name).some(a => a.id === id)) return;
+    apps.get(name).push({ id, isGroup, mates });
+  }
+
+  allEntries.forEach(e => {
+    // 1. メインのエントリー
+    const entryNames = e.memberDetails.map(m => m.name).filter(Boolean);
+    const isGroup = entryNames.length >= 2;
+    entryNames.forEach(name => {
+      const mates = entryNames.filter(n => n !== name);
+      addApp(name, 'entry_' + e.id, isGroup, mates);
+    });
+
+    // 2. 各メンバーの「他に組んでいるユニット(teams)」
+    e.memberDetails.forEach(md => {
+      if (!md.name || !md.teams) return;
+      md.teams.forEach((t, idx) => {
+        const teamNames = [md.name, ...t.mates].filter(Boolean);
+        if (teamNames.length >= 2) {
+          const teamId = 'team_' + e.id + '_' + md.name + '_' + idx;
+          teamNames.forEach(name => {
+            const mates = teamNames.filter(n => n !== name);
+            addApp(name, teamId, true, mates);
+          });
+        }
+      });
     });
   });
 
-  const blocked = new Map();
+  return apps;
+}
 
-  personEntries.forEach((entryList, personName)=>{
-    if(entryList.length < 2) return;
-    const labels = entryList.map(e=>e.label).join('・');
-    entryList.forEach(entry=>{
-      const md = entry.memberDetails.find(m=>m.name===personName);
-      if(!md) return;
-      md.teams.forEach(team=>{
-        team.mates.forEach(mate=>{
-          if(!mate || mate===personName) return;
-          const reason = `${personName} さんが「${labels}」の2組に出演するため`;
-          if(!blocked.has(mate)) blocked.set(mate, reason);
-        });
+// 渡されたエントリーリスト全体にルール違反がないかをチェック
+function checkViolations(allEntries) {
+  const apps = getAllAppearances(allEntries);
+  const violations = [];
+
+  // 1. 出演回数チェック（1人最大2回まで。ピン、コンビ等問わず）
+  apps.forEach((userApps, name) => {
+    if (userApps.length > 2) {
+      violations.push({
+        name: name,
+        reason: `1人の最大出演数は2回までです（現在 ${userApps.length} 回指定されています）。`
       });
+    }
+  });
+
+  // 2. またぎ演者（出演回数がちょうど2回の人）を特定
+  const matagiSet = new Set();
+  apps.forEach((userApps, name) => {
+    if (userApps.length === 2) {
+      matagiSet.add(name);
+    }
+  });
+
+  // 3. またぎ演者の相関グラフを作成（同じ複数人ユニットに同居しているまたぎ同士を結ぶ）
+  const unitMatagis = new Map(); // unitId -> Set(names)
+  apps.forEach((userApps, name) => {
+    userApps.forEach(app => {
+      if (app.isGroup && matagiSet.has(name)) {
+        if (!unitMatagis.has(app.id)) unitMatagis.set(app.id, new Set());
+        unitMatagis.get(app.id).add(name);
+      }
     });
+  });
+
+  const matagiGraph = new Map(); // name -> Set(neighbors)
+  unitMatagis.forEach((mSet) => {
+    const matagis = Array.from(mSet);
+    for (let i = 0; i < matagis.length; i++) {
+      for (let j = i + 1; j < matagis.length; j++) {
+        const u = matagis[i];
+        const v = matagis[j];
+        if (!matagiGraph.has(u)) matagiGraph.set(u, new Set());
+        if (!matagiGraph.has(v)) matagiGraph.set(v, new Set());
+        matagiGraph.get(u).add(v);
+        matagiGraph.get(v).add(u);
+      }
+    }
+  });
+
+  // 4. 数珠繋ぎの3連続またぎ（X ── Y ── Z）を検出
+  matagiGraph.forEach((neighbors, x) => {
+    neighbors.forEach(y => {
+      const yNeighbors = matagiGraph.get(y);
+      if (yNeighbors) {
+        yNeighbors.forEach(z => {
+          if (z !== x) {
+            // 重複メッセージを防ぐためにxとzの順序を固定
+            if (x < z) {
+              violations.push({
+                name: y,
+                reason: `チェリー方式（重複の3連鎖）に抵触：[ ${x} ─ ${y} ─ ${z} ] の関係性で3連続のまたぎが発生するため出演できません。`
+              });
+            }
+          }
+        });
+      }
+    });
+  });
+
+  return violations;
+}
+
+// 登録済みデータから「今後これ以上どこにも追加登録できない人」をシミュレーション計算
+function calcBlockedNames(){
+  const blocked = new Map();
+  const currentApps = getAllAppearances(entries);
+  const allNames = Array.from(currentApps.keys());
+
+  allNames.forEach(name => {
+    const userApps = currentApps.get(name) || [];
+    
+    // もしこの人が「新しい別のコンビ」に登録しようとしたらどうなるかを仮テスト
+    const fakeEntry = {
+      id: 'fake_check_' + Date.now(),
+      memberDetails: [
+        { name: name, teams: [] },
+        { name: 'VIRTUAL_PARTNER_' + name, teams: [] }
+      ]
+    };
+    
+    const testEntries = [...entries, fakeEntry];
+    const violations = checkViolations(testEntries);
+    
+    // 自分に関わる違反、または自分が原因で3連鎖が起きた場合はブロック対象
+    const myViolation = violations.find(v => v.name === name || v.reason.includes(name));
+    if (myViolation) {
+      let reason = "";
+      if (userApps.length >= 2) {
+        reason = "すでに2つの枠に出演しているため";
+      } else {
+        reason = "これ以上エントリーするとチェリー方式（3連続またぎ）に抵触するため";
+      }
+      blocked.set(name, reason);
+    }
   });
 
   return blocked;
 }
 
 function checkCanEnter(newMemberDetails){
-  const blocked = calcBlockedNames();
-  return newMemberDetails
-    .filter(m=>m.name && blocked.has(m.name))
-    .map(m=>({name:m.name, reason:blocked.get(m.name)}));
+  // doCheck側で一括シミュレーションを行うため、ここでは空の配列を返す形でラップします
+  return [];
 }
 
 /* ===== CHECK & REGISTER ===== */
@@ -329,24 +447,30 @@ function doCheck(){
     || validNames.join('・')
     || `エントリー${entries.length+1}`;
 
-  const violations = checkCanEnter(memberDetails);
+  // 今の入力内容を仮のエントリーオブジェクトにして、既存データと合体させてシミュレーション
+  const newEntry = { id: Date.now()+'', label, memberDetails };
+  const testEntries = [...entries, newEntry];
+  const violations = checkViolations(testEntries);
+
   const box = document.getElementById('resultBox');
 
   if(violations.length){
     box.className = 'result-box ng';
+    // ユニークなエラーメッセージだけを抽出して表示
+    const uniqueReasons = Array.from(new Set(violations.map(v => v.reason)));
     box.innerHTML = `
       <div class="icon">🚫</div>
-      <strong>チェリー方式に抵触しています</strong>
+      <strong>制限ルールに抵触しています</strong>
       <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
-      ${violations.map(v=>`
-        <div style="margin-bottom:8px">
-          <span style="color:var(--accent);font-weight:700">${v.name}</span> は出演不可<br>
-          <span style="font-size:11px;color:var(--muted)">• ${v.reason}</span>
+      ${uniqueReasons.map(r => `
+        <div style="margin-bottom:8px; font-size:12px;">
+          <span style="color:var(--accent); font-weight:700">• 判定NG：</span>${r}
         </div>`).join('')}`;
     return;
   }
 
-  entries.push({ id: Date.now()+'', label, memberDetails });
+  // 違反がなければ正式に保存
+  entries.push(newEntry);
   save();
 
   box.className = 'result-box ok';
@@ -402,7 +526,7 @@ function renderBlocked(){
     return;
   }
   el.innerHTML = `
-    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">追加エントリーでの出演ができない方です。</p>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">ルール上、これ以上の追加エントリーができない方々です。</p>
     ${[...blocked.entries()].map(([name,reason])=>`
       <div class="blocked-chip">
         <span class="b-name">🚫 ${name}</span>
