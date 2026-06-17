@@ -203,7 +203,7 @@ function getAllAppearances(allEntries) {
     const entryMembers = e.memberDetails.filter(m => m.code && m.name);
     entryMembers.forEach(m => {
       if (!apps.has(m.code)) apps.set(m.code, { name: m.name, list: [] });
-      
+       
       const userObj = apps.get(m.code);
       if (userObj.list.some(a => a.id === e.id)) return;
 
@@ -218,17 +218,17 @@ function getAllAppearances(allEntries) {
 function calcBlockedNames(){
   const blocked = new Map();
   const apps = getAllAppearances(entries);
-  
+   
   apps.forEach((userData, performerCode)=>{
     const userApps = userData.list;
     const performerName = userData.name;
-    
+     
     if(userApps.length >= 2){
       blocked.set(performerCode, {
         name: performerName,
         reason: "すでに2つの枠に出演しているため"
       });
-      
+       
       userApps.forEach(app=>{
         app.mates.forEach(mate=>{
           if(mate.code !== performerCode){
@@ -246,6 +246,14 @@ function calcBlockedNames(){
 
 /* ===== CHECK & REGISTER ===== */
 function doCheck(){
+  // --- 【変更点】エントリー名の入力チェックを追加 ---
+  const label = document.getElementById('entryName').value.trim();
+  if(!label){
+    alert('エントリー名を入力してください。');
+    return;
+  }
+  // ------------------------------------------------
+
   const memberDetails = collectForm();
   if(!memberDetails.length){ alert('出演者の「学籍番号」と「名前」を入力してください。'); return; }
 
@@ -254,11 +262,6 @@ function doCheck(){
     alert('同じエントリー内に同じ学籍番号が重複して入力されています。');
     return;
   }
-
-  const validNames = memberDetails.map(m=>m.name);
-  const label = (document.getElementById('entryName').value.trim())
-    || validNames.join('・')
-    || `エントリー${entries.length+1}`;
 
   const box = document.getElementById('resultBox');
 
