@@ -148,7 +148,7 @@ h1{font-size:clamp(20px,5vw,32px);font-weight:900;letter-spacing:-.02em;backgrou
 
   <div style="margin-bottom:16px">
     <span class="field-label">エントリー名（コンビ名・ユニット名など、任意）</span>
-    <input type="text" class="field-input" id="entryName" placeholder="例：山田・田中、ABCトリオ など">
+    <input type="text" class="field-input" id="entryName" placeholder="例：ミルクボーイ、霜降り明星、かまいたち など">
   </div>
 
   <div id="performersWrap"></div>
@@ -164,11 +164,7 @@ h1{font-size:clamp(20px,5vw,32px);font-weight:900;letter-spacing:-.02em;backgrou
   <ul class="entry-list" id="entryList"></ul>
 </div>
 
-<!-- 出演不可者 -->
-<div class="panel">
-  <div class="panel-title">出演不可者（チェリー方式）</div>
-  <div id="blockedArea"></div>
-</div>
+
 
 <script>
 /* ========================================
@@ -213,15 +209,15 @@ function buildForm(n){
       <div class="perf-header">
         <div class="perf-num">${i+1}</div>
         <input class="perf-name-input" id="pname_${i}" type="text"
-          placeholder="出演者 ${i+1}｜本名フルネーム（例：山田 太郎）">
+          placeholder="出演者 ${i+1}｜本名フルネーム（例：駒場孝、内海崇）">
       </div>
       <div class="perf-body">
         <div class="teams-section-label">
-          ▸ この人が普段組んでいるチームを入力<br>
-          <span style="font-size:10px">チーム名と相方の本名フルネームを入力してください。複数チームあれば「チームを追加」。</span>
+          ▸ この人が普段組んでいるユニットを入力<br>
+          <span style="font-size:10px">ユニット名と相方の本名フルネームを入力してください。複数ユニットあれば「ユニットを追加」。</span>
         </div>
         <div id="tlist_${i}"></div>
-        <button class="btn-add-team" onclick="addTeam(${i})">＋ チームを追加</button>
+        <button class="btn-add-team" onclick="addTeam(${i})">＋ ユニットを追加</button>
       </div>`;
     wrap.appendChild(card);
   }
@@ -235,8 +231,8 @@ function addTeam(pi){
   el.id = `tb_${tid}`;
   el.innerHTML = `
     <div class="team-row">
-      <span class="team-label-badge">チーム</span>
-      <input class="team-name-input" id="tname_${tid}" type="text" placeholder="チーム名・ユニット名（例：花月コンビ）">
+      <span class="team-label-badge">ユニット</span>
+      <input class="team-name-input" id="tname_${tid}" type="text" placeholder="ユニット名（例：ミルクボーイ、霜降り明星）">
       <button class="btn-del" onclick="document.getElementById('tb_${tid}').remove()">×</button>
     </div>
     <div class="mates-label">相方・メンバー（本名フルネーム）</div>
@@ -254,7 +250,7 @@ function addMate(tid){
   row.className = 'mate-row';
   row.id = `mr_${mid}`;
   row.innerHTML = `
-    <input class="mate-input" type="text" placeholder="相方の本名フルネーム">
+    <input class="mate-input" type="text" placeholder="相方の本名フルネーム（例：今田耕司、東野幸治）">
     <button class="btn-del" onclick="document.getElementById('mr_${mid}').remove()">×</button>`;
   wrap.appendChild(row);
 }
