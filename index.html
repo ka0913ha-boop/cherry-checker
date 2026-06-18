@@ -246,13 +246,11 @@ function calcBlockedNames(){
 
 /* ===== CHECK & REGISTER ===== */
 function doCheck(){
-  // --- 【変更点】エントリー名の入力チェックを追加 ---
   const label = document.getElementById('entryName').value.trim();
   if(!label){
     alert('エントリー名を入力してください。');
     return;
   }
-  // ------------------------------------------------
 
   const memberDetails = collectForm();
   if(!memberDetails.length){ alert('出演者の「学籍番号」と「名前」を入力してください。'); return; }
@@ -265,6 +263,31 @@ function doCheck(){
 
   const box = document.getElementById('resultBox');
 
+  // === 【追加ルール】同一グループ内のメンバー中抜き重複チェック ===
+  // 今回の登録がコンビやトリオ（2人以上）の場合のみ判定
+  if (memberDetails.length >= 2) {
+    for (const pastEntry of entries) {
+      const pastCodes = pastEntry.memberDetails.map(m => m.code);
+      // 今回入力されたメンバー全員が、ある過去のグループに丸ごと含まれているか
+      const isSubset = memberDetails.every(m => pastCodes.includes(m.code));
+      
+      if (isSubset) {
+        box.className = 'result-box ng';
+        box.innerHTML = `
+          <div class="icon">🚫</div>
+          <strong>ユニット内重複エラー</strong>
+          <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
+          <div style="margin-bottom:8px; font-size:12px;">
+            <span style="color:var(--accent); font-weight:700">• 判定NG：</span>
+            登録済みのグループ「${pastEntry.label}」の同一メンバーによるコンビ・ユニットはエントリー不可能です。
+          </div>`;
+        return;
+      }
+    }
+  }
+  // ============================================================
+
+  // チェリー方式による出演不可チェック
   const blocked = calcBlockedNames();
   for(const member of memberDetails){
     if(blocked.has(member.code)){
