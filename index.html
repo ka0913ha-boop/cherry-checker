@@ -92,7 +92,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .entry-names{font-size:12px;color:var(--muted);margin-top:2px}
 
 /* BLOCKED */
-.blocked-chip{display:inline-flex;align-items:center;gap:8px;background:#surface;border:1px solid #ffd0d9;border-radius:7px;padding:6px 12px;margin:4px 4px 4px 0;font-size:13px;vertical-align:top;color:var(--text)}
+.blocked-chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface); border-radius:7px;padding:6px 12px;margin:4px 4px 4px 0;font-size:13px;vertical-align:top;color:var(--text)}
 .blocked-container{display:flex;flex-direction:column;gap:8px}
 .blocked-row{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
 .blocked-row-title{font-size:11px;font-weight:700;color:var(--muted);width:100%;margin-top:4px}
@@ -168,7 +168,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 <script>
 const KEY = 'cherry_student_id_v3'; 
 let entries = [];
-let searchQuery = ''; // ★追加：検索クエリ保持用
+let searchQuery = ''; 
 
 function save(){ localStorage.setItem(KEY, JSON.stringify(entries)) }
 function load(){ try{ const r=localStorage.getItem(KEY); if(r) entries=JSON.parse(r) }catch(e){ entries=[] } }
@@ -241,7 +241,6 @@ function getAllAppearances(allEntries) {
   return apps;
 }
 
-// ★強化：本人ブロックと巻き込まれ相方を識別できるようにデータ拡張
 function calcBlockedNames(){
   const blocked = new Map();
   const apps = getAllAppearances(entries);
@@ -251,7 +250,6 @@ function calcBlockedNames(){
     const performerName = userData.name;
      
     if(userApps.length >= 2){
-      // 本人は「最優先で本人ロック」
       blocked.set(performerCode, {
         name: performerName,
         reason: "すでに2枠出演しているため",
@@ -261,7 +259,6 @@ function calcBlockedNames(){
       userApps.forEach(app=>{
         app.mates.forEach(mate=>{
           if(mate.code !== performerCode){
-            // 相方は、まだ「本人ロック」がかかっていない場合のみ「巻き込まれ」として追加
             if(!blocked.has(mate.code) || !blocked.get(mate.code).isSelf) {
               blocked.set(mate.code, {
                 name: mate.name,
@@ -277,7 +274,6 @@ function calcBlockedNames(){
   return blocked;
 }
 
-// 未来予知ロジック（違反時の情報を詳しく返すように強化）
 function hasCherryViolation(allEntries) {
   const apps = getAllAppearances(allEntries);
 
@@ -291,7 +287,7 @@ function hasCherryViolation(allEntries) {
       return { 
         violated: true, 
         label: entry.label,
-        names: twoTimers.map(m => m.name) // 原因となった複数またぎの人の名前を配列で返す
+        names: twoTimers.map(m => m.name) 
       };
     }
   }
@@ -317,7 +313,6 @@ function doCheck(){
 
   const box = document.getElementById('resultBox');
 
-  // 現時点で出演不可チェック
   const blocked = calcBlockedNames();
   for(const member of memberDetails){
     if(blocked.has(member.code)){
@@ -329,13 +324,12 @@ function doCheck(){
         <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
         <div style="font-size:12px; line-height:1.6">
           理由：${info.reason}<br>
-          <span style="color:var(--muted)">※チェリー方式のルールにより、この学籍番号（${member.code}）は弾かれました。</span>
+          <span style="color:var(--muted)">※チェリー方式のルールにより、この学籍番号（${member.code}）はすべての形式で出演不可となります。</span>
         </div>`;
       return;
     }
   }
 
-  // 未来予知チェック（★エラー文面を分かりやすく超強化！）
   const newEntry = { id: Date.now()+'', label, memberDetails };
   const testEntries = [...entries, newEntry]; 
   
@@ -354,7 +348,6 @@ function doCheck(){
     return;
   }
 
-  // 登録
   entries.push(newEntry);
   save();
 
@@ -372,24 +365,20 @@ function doCheck(){
   }, 1500);
 }
 
-/* ===== ★追加：検索機能のトリガー ===== */
 function onSearch(val) {
   searchQuery = val.trim();
-  renderList(); // リストだけ爆速再描画
+  renderList(); 
 }
 
-/* ===== ★追加：CSVダウンロード機能 ===== */
 function downloadCSV() {
   if(!entries.length) { alert('登録されたエントリーがありません。'); return; }
   
-  // Excelでの文字化けを防ぐために「BOM」付きのUTF-8にする
   let csvContent = '\uFEFFエントリー名,形式,学籍番号,名前\n';
   
   entries.forEach(e => {
     const validMembers = e.memberDetails.filter(m => m.code && m.name);
     const fmt = fmtLabel(validMembers.length);
     validMembers.forEach(m => {
-      // カンマやクォーテーションのエスケープ処理
       const l = e.label.replace(/"/g, '""');
       const code = m.code.replace(/"/g, '""');
       const name = m.name.replace(/"/g, '""');
@@ -404,7 +393,7 @@ function downloadCSV() {
   link.click();
 }
 
-/* ===== ★追加：カウンター更新機能 ===== */
+/* ===== 🛠️ 修正：人人 → 人 ===== */
 function updateCounter() {
   const totalGroups = entries.length;
   const uniqueCodes = new Set();
@@ -420,7 +409,7 @@ function updateCounter() {
   });
   
   document.getElementById('entryCounter').innerHTML = 
-    `現在：<strong>${totalGroups} 組</strong> ／ 実出演者：<strong>${uniqueCodes.size} 人</strong> （延べ人数：${totalSlots}人人）`;
+    `現在：<strong>${totalGroups} 組</strong> ／ 実出演者：<strong>${uniqueCodes.size} 人</strong> （延べ人数：${totalSlots} 人）`;
 }
 
 /* ===== RENDER ===== */
@@ -434,7 +423,6 @@ function renderList(){
   const el = document.getElementById('entryList');
   if(!entries.length){ el.innerHTML='<li class="no-data">まだエントリーがありません</li>'; return; }
   
-  // ★検索クエリによるフィルタリング機能を追加
   const filtered = entries.filter(e => {
     if(!searchQuery) return true;
     const s = searchQuery.toLowerCase();
@@ -464,6 +452,7 @@ function renderList(){
   }).join('');
 }
 
+/* ===== 🛠️ 修正：相方の解説文面・CSS変数の修正 ===== */
 function renderBlocked(){
   const blocked = calcBlockedNames();
   const el = document.getElementById('blockedArea');
@@ -473,14 +462,13 @@ function renderBlocked(){
     return;
   }
 
-  // 本人と相方をキレイに分別して表示するUIに変更
   const selfList = [...blocked.values()].filter(i => i.isSelf);
   const mateList = [...blocked.values()].filter(i => !i.isSelf);
 
   let html = '';
   
   if(selfList.length > 0) {
-    html += `<div class="blocked-row-title">🚫 2回出演した本人（これ以上いかなる枠でも出演不可）</div><div class="blocked-row">`;
+    html += `<div class="blocked-row-title">🚫 2回出演した本人（これ以上のエントリー不可）</div><div class="blocked-row">`;
     html += selfList.map(info => `
       <div class="blocked-chip" style="border-color:#ffccd3; background:#fff5f6">
         <span class="entry-badge self-block">本人</span>
@@ -490,7 +478,7 @@ function renderBlocked(){
   }
 
   if(mateList.length > 0) {
-    html += `<div class="blocked-row-title" style="margin-top:12px;">⚠️ 巻き込まれた相方（ピンでのみ出演可 / 新しい相方と組むのはNG）</div><div class="blocked-row">`;
+    html += `<div class="blocked-row-title" style="margin-top:12px;">⚠️ 巻き込まれた相方（これ以上のエントリー不可）</div><div class="blocked-row">`;
     html += mateList.map(info => `
       <div class="blocked-chip" style="border-color:#ffe0b5; background:#fffdf9">
         <span class="entry-badge mate-block" style="background:#f59e0b">相方</span>
