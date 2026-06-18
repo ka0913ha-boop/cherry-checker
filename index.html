@@ -32,7 +32,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .panel-title{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;justify-content:between;align-items:center}
 
 /* COUNTER */
-.counter-box {font-size:12px;color:var(--muted);text-align:center;margin-top:-20px;margin-bottom:24px}
+.counter-box {font-size:14px;font-weight:700;color:var(--text);text-align:center;margin-top:-20px;margin-bottom:24px}
 
 /* INPUTS */
 .field-label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block}
@@ -110,10 +110,10 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
   <div class="cherry">🍒</div>
   <div class="tag">CHERRY METHOD</div>
   <h1>チェリー方式チェッカー</h1>
-  <p class="sub">エントリーを入力していくだけで、学籍番号をベースにチェリー方式を自動判定します。</p>
+  <p class="sub">エントリーを入力していくだけで、学籍番号をベースにチェリー方式を自動判定します。学籍番号は半角で入力してください。</p>
 </header>
 
-<div class="counter-box" id="entryCounter">現在：0 組 ／ 実出演者：0 人</div>
+<div class="counter-box" id="entryCounter">現在：0 組</div>
 
 <div class="panel" id="secFormat">
   <div class="panel-title">Step 1 ／ 出演形式を選択</div>
@@ -408,22 +408,10 @@ function downloadCSV() {
   link.click();
 }
 
+// 🛠️ 修正：組数カウントのみを表示するように変更
 function updateCounter() {
   const totalGroups = entries.length;
-  const uniqueCodes = new Set();
-  let totalSlots = 0;
-  
-  entries.forEach(e => {
-    e.memberDetails.forEach(m => {
-      if(m.code) {
-        uniqueCodes.add(m.code);
-        totalSlots++;
-      }
-    });
-  });
-  
-  document.getElementById('entryCounter').innerHTML = 
-    `現在：<strong>${totalGroups} 組</strong> ／ 実出演者：<strong>${uniqueCodes.size} 人</strong> （延べ人数：${totalSlots} 人）`;
+  document.getElementById('entryCounter').innerHTML = `現在：<strong>${totalGroups} 組</strong>`;
 }
 
 /* ===== RENDER ===== */
@@ -480,8 +468,9 @@ function renderBlocked(){
 
   let html = '';
   
+  // 🛠️ 修正：「2回出演した本人」 ➡️ 「2回出演する本人」に変更
   if(selfList.length > 0) {
-    html += `<div class="blocked-row-title">🚫 2回出演した本人（これ以上のエントリー不可）</div><div class="blocked-row">`;
+    html += `<div class="blocked-row-title">🚫 2回出演する本人（これ以上のエントリー不可）</div><div class="blocked-row">`;
     html += selfList.map(info => `
       <div class="blocked-chip" style="border-color:#ffccd3; background:#fff5f6">
         <span class="entry-badge self-block">本人</span>
