@@ -157,6 +157,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
   </div>
 
   <div class="action-row">
+    <!-- 🛠️ 管理者ロック対象のボタン -->
     <button class="btn-ghost btn-csv" onclick="downloadCSV()">Excel・CSV出力</button>
     <button class="btn-ghost" onclick="clearAll()">すべて削除</button>
   </div>
@@ -166,12 +167,27 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 
 <script>
+// 🔑 管理者用パスワード（ここを好きな文字に変えてください）
+const ADMIN_PASSWORD = 'cherry2026';
+
 const KEY = 'cherry_student_id_v3'; 
 let entries = [];
 let searchQuery = ''; 
 
 function save(){ localStorage.setItem(KEY, JSON.stringify(entries)) }
 function load(){ try{ const r=localStorage.getItem(KEY); if(r) entries=JSON.parse(r) }catch(e){ entries=[] } }
+
+/* ===== 🛠️ パスワード認証関数 ===== */
+function checkAdminAuth() {
+  const input = prompt('【管理者認証】パスワードを入力してください：');
+  if (input === null) return false; // キャンセルされた場合
+  if (input === ADMIN_PASSWORD) {
+    return true;
+  } else {
+    alert('パスワードが違います。アクセス権限がありません。');
+    return false;
+  }
+}
 
 /* ===== FORMAT SELECT ===== */
 let curCount = 0;
@@ -313,7 +329,6 @@ function doCheck(){
 
   const box = document.getElementById('resultBox');
 
-  // ブラックリストを元に、理由を明確に分けて即時弾く
   const blocked = calcBlockedNames();
   for(const member of memberDetails){
     if(blocked.has(member.code)){
@@ -343,7 +358,6 @@ function doCheck(){
     }
   }
 
-  // 未来予知チェック（中抜き・横スライドの検知）
   const newEntry = { id: Date.now()+'', label, memberDetails };
   const testEntries = [...entries, newEntry]; 
   
@@ -362,7 +376,6 @@ function doCheck(){
     return;
   }
 
-  // 登録
   entries.push(newEntry);
   save();
 
@@ -385,7 +398,10 @@ function onSearch(val) {
   renderList(); 
 }
 
+/* ===== 🛠️ 修正：CSV出力にパスワードロックを適用 ===== */
 function downloadCSV() {
+  if (!checkAdminAuth()) return; // 認証失敗なら中止
+
   if(!entries.length) { alert('登録されたエントリーがありません。'); return; }
   
   let csvContent = '\uFEFFエントリー名,形式,学籍番号,名前\n';
@@ -410,7 +426,7 @@ function downloadCSV() {
 
 function updateCounter() {
   const totalGroups = entries.length;
-  document.getElementById('entryCounter').innerHTML = `現在：<strong>${totalGroups} 組</strong>`;
+  document.getElementById('entryCounter').innerHTML = `current：<strong>${totalGroups} 組</strong>`;
 }
 
 /* ===== RENDER ===== */
@@ -424,7 +440,6 @@ function renderList(){
   const el = document.getElementById('entryList');
   if(!entries.length){ el.innerHTML='<li class="no-data">まだエントリーがありません</li>'; return; }
   
-  // 🔍 内部ロジック：学籍番号での検索は生かしたままにする
   const filtered = entries.filter(e => {
     if(!searchQuery) return true;
     const s = searchQuery.toLowerCase();
@@ -440,8 +455,6 @@ function renderList(){
   el.innerHTML = filtered.map(e=>{
     const validMembers = e.memberDetails.filter(m=>m.code && m.name);
     const n = validMembers.length;
-    
-    // 🛠️ 修正：表示部分から学籍番号 `(${m.code})` を完全に削除
     const names = validMembers.map(m=>m.name).join(' ・ ');
     
     return `
@@ -451,6 +464,7 @@ function renderList(){
           <div class="entry-unit">${e.label}</div>
           <div class="entry-names">${names}</div>
         </div>
+        <!-- 🛠️ 修正：個別削除はミス防止の確認アラートだけに留める（誰でも消せる状態を維持、必要ならここもロック可能） -->
         <button class="btn-ghost" onclick="delEntry('${e.id}')">削除</button>
       </li>`;
   }).join('');
@@ -495,13 +509,18 @@ function renderBlocked(){
 }
 
 function delEntry(id){
+  if(!confirm('このエントリーを削除しますか？')) return;
   entries = entries.filter(e=>e.id!==id);
   save(); renderAll();
 }
+
+/* ===== 🛠️ 修正：すべて削除にパスワードロックを適用 ===== */
 function clearAll(){
-  if(!confirm('すべてのエントリーを削除しますか？')) return;
+  if (!checkAdminAuth()) return; // 認証失敗なら中止
+  if(!confirm('本当にすべてのエントリーを完全に消去しますか？この操作は取り消せません。')) return;
   entries=[]; save(); renderAll();
 }
+
 function clearResult(){
   const b=document.getElementById('resultBox');
   if(b){ b.className='result-box'; b.innerHTML=''; }
