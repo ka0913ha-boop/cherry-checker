@@ -244,6 +244,25 @@ function calcBlockedNames(){
   return blocked;
 }
 
+// ★【大正解の未来予知ロジック】仮追加した状態でチェリー方式違反が起きないかシミュレートする関数
+function hasCherryViolation(allEntries) {
+  const apps = getAllAppearances(allEntries);
+
+  for (const entry of allEntries) {
+    // 各グループごとに「2回出演する人」の人数をカウント
+    const count = entry.memberDetails.filter(m => {
+      const app = apps.get(m.code);
+      return app && app.list.length >= 2;
+    }).length;
+
+    // 同じグループ内に2回出演者が「2人以上」存在したら即アウト
+    if (count >= 2) {
+      return { violated: true, label: entry.label };
+    }
+  }
+  return { violated: false };
+}
+
 /* ===== CHECK & REGISTER ===== */
 function doCheck(){
   const label = document.getElementById('entryName').value.trim();
@@ -263,31 +282,7 @@ function doCheck(){
 
   const box = document.getElementById('resultBox');
 
-  // === 【追加ルール】同一グループ内のメンバー中抜き重複チェック ===
-  // 今回の登録がコンビやトリオ（2人以上）の場合のみ判定
-  if (memberDetails.length >= 2) {
-    for (const pastEntry of entries) {
-      const pastCodes = pastEntry.memberDetails.map(m => m.code);
-      // 今回入力されたメンバー全員が、ある過去のグループに丸ごと含まれているか
-      const isSubset = memberDetails.every(m => pastCodes.includes(m.code));
-      
-      if (isSubset) {
-        box.className = 'result-box ng';
-        box.innerHTML = `
-          <div class="icon">🚫</div>
-          <strong>ユニット内重複エラー</strong>
-          <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
-          <div style="margin-bottom:8px; font-size:12px;">
-            <span style="color:var(--accent); font-weight:700">• 判定NG：</span>
-            登録済みのグループ「${pastEntry.label}」の同一メンバーによるコンビ・ユニットはエントリー不可能です。
-          </div>`;
-        return;
-      }
-    }
-  }
-  // ============================================================
-
-  // チェリー方式による出演不可チェック
+  // 現時点で出演不可（確定ブラックリスト）になっている人が含まれていないかチェック
   const blocked = calcBlockedNames();
   for(const member of memberDetails){
     if(blocked.has(member.code)){
@@ -304,7 +299,25 @@ function doCheck(){
     }
   }
 
+  // ★ ユーザーさん発案の未来予知チェック発動！
   const newEntry = { id: Date.now()+'', label, memberDetails };
+  const testEntries = [...entries, newEntry]; // 今回の入力を仮追加したシミュレーションデータを作成
+  
+  const violation = hasCherryViolation(testEntries);
+  if (violation.violated) {
+    box.className = 'result-box ng';
+    box.innerHTML = `
+      <div class="icon">🚫</div>
+      <strong>チェリー方式違反です</strong>
+      <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
+      <div style="margin-bottom:8px; font-size:12px;">
+        <span style="color:var(--accent); font-weight:700">• 判定NG：</span>
+        このエントリーを登録すると、グループ「<strong>${violation.label}</strong>」の中に、2回出演するメンバーが複数（2人以上）並ぶことになり、チェリー方式のルールに違反します。
+      </div>`;
+    return;
+  }
+
+  // すべての鉄壁のチェックをクリアしたら、正式に登録して保存！
   entries.push(newEntry);
   save();
 
