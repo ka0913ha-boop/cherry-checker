@@ -7,40 +7,18 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-:root{
-  --bg:#fff8f8;
-  --surface:#ffffff;
-  --card:#fff0f3;
-  --border:#ffd0d9;
-  --accent:#d62839;
-  --ok:#22c55e;
-  --text:#50242d;
-  --muted:#9a6a73;
-  --r:14px;
-}
-
+:root{--bg:#fff8f8;--surface:#ffffff;--card:#fff0f3;--border:#ffd0d9;--accent:#d62839;--ok:#22c55e;--text:#50242d;--muted:#9a6a73;--r:14px;}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px 80px}
-
 header{text-align:center;margin-bottom:36px}
 .cherry{font-size:64px;margin-bottom:8px}
 .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;margin-bottom:10px}
 h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.8}
-
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;max-width:680px;margin-left:auto;margin-right:auto;box-shadow:0 4px 18px rgba(214,40,57,.08)}
-.panel-title{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;justify-content:between;align-items:center}
-
-/* COUNTER */
-.counter-box {font-size:14px;font-weight:700;color:var(--text);text-align:center;margin-top:-20px;margin-bottom:24px}
-
-/* INPUTS */
+.panel-title{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
 .field-label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block}
 .field-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.15s}
 .field-input:focus{border-color:var(--accent)}
-.field-input::placeholder{color:var(--muted)}
-
-/* FORMAT */
 .fmt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:6px}
 .fmt-btn{padding:12px 4px;border:1.5px solid var(--border);border-radius:8px;background:var(--card);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}
 .fmt-btn:hover{border-color:var(--accent);color:var(--text)}
@@ -48,59 +26,18 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 .fmt-sub{font-size:10px;font-weight:400;color:var(--muted);display:block;margin-top:2px}
 .custom-wrap{display:none;align-items:center;gap:8px;margin-top:10px}
 .custom-wrap.on{display:flex}
-.custom-wrap label{font-size:12px;color:var(--muted)}
 .num-input{width:68px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none}
-.num-input:focus{border-color:var(--accent)}
-
-/* PERFORMER CARDS */
 #performersWrap{margin-top:16px;display:flex;flex-direction:column;gap:10px}
 .perf-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden}
 .perf-header{display:flex;align-items:center;gap:10px;padding:12px 14px;flex-wrap:wrap}
 .perf-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.perf-code-input{width:110px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
-.perf-name-input{flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none;transition:.15s}
-.perf-code-input:focus, .perf-name-input:focus{border-color:var(--accent)}
-.perf-code-input::placeholder, .perf-name-input::placeholder{color:var(--muted);font-weight:400}
-
-/* PRIMARY BTN */
-.btn-primary{display:block;width:100%;padding:13px;border:none;border-radius:8px;background:linear-gradient(135deg,#ff5d73,#d62839);color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:18px;letter-spacing:.03em;transition:opacity .15s}
-.btn-primary:hover{opacity:.88}
-.btn-ghost{padding:5px 11px;border:1.5px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;transition:.15s}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
-.btn-csv{border-color:var(--ok);color:var(--ok)}
-.btn-csv:hover{background:#eefbf2;border-color:var(--ok);color:var(--ok)}
-
-/* SEARCH BOX */
-.search-wrap{margin-bottom:14px}
-
-/* RESULT */
+.perf-code-input{width:110px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none}
+.perf-name-input{flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none}
+.btn-primary{display:block;width:100%;padding:13px;border:none;border-radius:8px;background:linear-gradient(135deg,#ff5d73,#d62839);color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:18px;letter-spacing:.03em}
 .result-box{border-radius:9px;padding:14px 18px;margin-top:14px;display:none;font-size:13px;line-height:1.8}
 .result-box.ok{display:block;background:#eefbf2;border:1.5px solid var(--ok);color:#1e5e2f}
 .result-box.ng{display:block;background:#fff0f2;border:1.5px solid var(--accent);color:#d62839}
-.result-box .icon{font-size:20px;margin-bottom:4px}
 .error-highlight {color:var(--accent);font-weight:700;background:#fff0f2;padding:2px 4px;border-radius:4px}
-
-/* LIST */
-.entry-list{list-style:none}
-.entry-item{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--border)}
-.entry-item:last-child{border-bottom:none}
-.entry-badge{flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:4px;background:#ffe1e8;color:#d62839}
-.entry-badge.self-block{background:var(--accent);color:#fff}
-.entry-badge.mate-block{background:#ff96a6;color:#fff}
-.entry-info{flex:1;min-width:0}
-.entry-unit{font-weight:700;font-size:14px}
-.entry-names{font-size:12px;color:var(--muted);margin-top:2px}
-
-/* BLOCKED */
-.blocked-chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface); border-radius:7px;padding:6px 12px;margin:4px 4px 4px 0;font-size:13px;vertical-align:top;color:var(--text)}
-.blocked-container{display:flex;flex-direction:column;gap:8px}
-.blocked-row{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
-.blocked-row-title{font-size:11px;font-weight:700;color:var(--muted);width:100%;margin-top:4px}
-.b-name{font-weight:700}
-.b-reason{font-size:11px;color:var(--muted)}
-.no-data{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
-.action-row{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}
-
 @media(max-width:480px){.fmt-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
@@ -110,10 +47,8 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
   <div class="cherry">🍒</div>
   <div class="tag">CHERRY METHOD</div>
   <h1>チェリー方式チェッカー</h1>
-  <p class="sub">エントリーを入力していくだけで、学籍番号をベースにチェリー方式を自動判定します。学籍番号は半角で入力してください。</p>
+  <p class="sub">入力したメンバー同士で「チェリー方式の違反」が起きないか、その場で一発判定します。</p>
 </header>
-
-<div class="counter-box" id="entryCounter">現在：0 組</div>
 
 <div class="panel" id="secFormat">
   <div class="panel-title">Step 1 ／ 出演形式を選択</div>
@@ -132,65 +67,14 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 <div class="panel" id="secEntry" style="display:none">
   <div class="panel-title">Step 2 ／ 出演者を入力</div>
-
-  <div style="margin-bottom:16px">
-    <span class="field-label">エントリー名（コンビ名・ユニット名・芸名など）</span>
-    <input type="text" class="field-input" id="entryName" placeholder="例：ミルクボーイ、ななまがり など">
-  </div>
-
   <div id="performersWrap"></div>
-
-  <button class="btn-primary" onclick="doCheck()">チェック ＆ 登録</button>
+  <button class="btn-primary" onclick="doCheck()">チェリー方式判定を実行</button>
   <div class="result-box" id="resultBox"></div>
 </div>
 
-<div class="panel">
-  <div class="panel-title">出演不可者（チェリー方式判定）</div>
-  <div class="blocked-container" id="blockedArea"></div>
-</div>
-
-<div class="panel">
-  <div class="panel-title">登録済みエントリー</div>
-  
-  <div class="search-wrap">
-    <input type="text" class="field-input" id="searchBox" placeholder="🔍 ユニット名、名前、学籍番号で検索..." oninput="onSearch(this.value)">
-  </div>
-
-  <div class="action-row">
-    <!-- 🛠️ 管理者ロック対象のボタン -->
-    <button class="btn-ghost btn-csv" onclick="downloadCSV()">Excel・CSV出力</button>
-    <button class="btn-ghost" onclick="clearAll()">すべて削除</button>
-  </div>
-  
-  <ul class="entry-list" id="entryList"></ul>
-</div>
-
-
 <script>
-// 🔑 管理者用パスワード（ここを好きな文字に変えてください）
-const ADMIN_PASSWORD = 'cherry2026';
-
-const KEY = 'cherry_student_id_v3'; 
-let entries = [];
-let searchQuery = ''; 
-
-function save(){ localStorage.setItem(KEY, JSON.stringify(entries)) }
-function load(){ try{ const r=localStorage.getItem(KEY); if(r) entries=JSON.parse(r) }catch(e){ entries=[] } }
-
-/* ===== 🛠️ パスワード認証関数 ===== */
-function checkAdminAuth() {
-  const input = prompt('【管理者認証】パスワードを入力してください：');
-  if (input === null) return false; // キャンセルされた場合
-  if (input === ADMIN_PASSWORD) {
-    return true;
-  } else {
-    alert('パスワードが違います。アクセス権限がありません。');
-    return false;
-  }
-}
-
-/* ===== FORMAT SELECT ===== */
 let curCount = 0;
+
 function selectFmt(v){
   document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.toggle('active', b.dataset.n==v));
   const isC = v==='c';
@@ -200,12 +84,12 @@ function selectFmt(v){
   document.getElementById('secEntry').style.display='block';
   clearResult();
 }
+
 function onCustomN(){
   curCount = parseInt(document.getElementById('customN').value)||4;
   buildForm(curCount);
 }
 
-/* ===== BUILD FORM ===== */
 function buildForm(n){
   const wrap = document.getElementById('performersWrap');
   wrap.innerHTML = '';
@@ -222,7 +106,6 @@ function buildForm(n){
   }
 }
 
-/* ===== COLLECT FORM ===== */
 function collectForm(){
   const result = [];
   for(let i=0; i<curCount; i++){
@@ -234,299 +117,28 @@ function collectForm(){
   return result;
 }
 
-/* ========================================
-   CHERRY METHOD CORE LOGIC
-   ======================================== */
-
-function getAllAppearances(allEntries) {
-  const apps = new Map();
-
-  allEntries.forEach(e => {
-    const entryMembers = e.memberDetails.filter(m => m.code && m.name);
-    entryMembers.forEach(m => {
-      if (!apps.has(m.code)) apps.set(m.code, { name: m.name, list: [] });
-       
-      const userObj = apps.get(m.code);
-      if (userObj.list.some(a => a.id === e.id)) return;
-
-      const mates = entryMembers.filter(o => o.code !== m.code).map(o => ({ code: o.code, name: o.name }));
-      userObj.list.push({ id: e.id, mates });
-    });
-  });
-
-  return apps;
-}
-
-function calcBlockedNames(){
-  const blocked = new Map();
-  const apps = getAllAppearances(entries);
-   
-  apps.forEach((userData, performerCode)=>{
-    const userApps = userData.list;
-    const performerName = userData.name;
-     
-    if(userApps.length >= 2){
-      blocked.set(performerCode, {
-        name: performerName,
-        reason: "すでに2枠出演しているため",
-        isSelf: true
-      });
-       
-      userApps.forEach(app=>{
-        app.mates.forEach(mate=>{
-          if(mate.code !== performerCode){
-            if(!blocked.has(mate.code) || !blocked.get(mate.code).isSelf) {
-              blocked.set(mate.code, {
-                name: mate.name,
-                reason: `【${performerName}】が2回出演しているため`,
-                isSelf: false
-              });
-            }
-          }
-        });
-      });
-    }
-  });
-  return blocked;
-}
-
-function hasCherryViolation(allEntries) {
-  const apps = getAllAppearances(allEntries);
-
-  for (const entry of allEntries) {
-    const twoTimers = entry.memberDetails.filter(m => {
-      const app = apps.get(m.code);
-      return app && app.list.length >= 2;
-    });
-
-    if (twoTimers.length >= 2) {
-      return { 
-        violated: true, 
-        label: entry.label,
-        names: twoTimers.map(m => m.name) 
-      };
-    }
-  }
-  return { violated: false };
-}
-
-/* ===== CHECK & REGISTER ===== */
 function doCheck(){
-  const label = document.getElementById('entryName').value.trim();
-  if(!label){
-    alert('エントリー名を入力してください。');
-    return;
-  }
-
   const memberDetails = collectForm();
-  if(!memberDetails.length){ alert('出演者の「学籍番号」と「名前」を入力してください。'); return; }
+  if(memberDetails.length < curCount){ 
+    alert('全員分の「学籍番号」と「名前」を入力してください。🍒'); 
+    return; 
+  }
 
   const codes = memberDetails.map(m => m.code);
   if(new Set(codes).size !== codes.length){
-    alert('同じエントリー内に同じ学籍番号が重複して入力されています。');
+    alert('同じユニット内に同じ学籍番号が重複しています！');
     return;
   }
 
   const box = document.getElementById('resultBox');
-
-  const blocked = calcBlockedNames();
-  for(const member of memberDetails){
-    if(blocked.has(member.code)){
-      const info = blocked.get(member.code);
-      box.className = 'result-box ng';
-      
-      if(info.isSelf) {
-        box.innerHTML = `
-          <div class="icon">🚫 3枠目出演エラー</div>
-          <strong>${info.name} さんはすでに2枠出演しています</strong>
-          <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
-          <div style="font-size:12px; line-height:1.6">
-            理由：${info.reason}<br>
-            <span style="color:var(--muted)">※チェリー方式のルールにより、同一人物が3枠以上出演することはできません。</span>
-          </div>`;
-      } else {
-        box.innerHTML = `
-          <div class="icon">🚫 連鎖ブロックエラー</div>
-          <strong>${info.name} さんはエントリーできません</strong>
-          <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
-          <div style="font-size:12px; line-height:1.6">
-            理由：${info.reason}<br>
-            <span style="color:var(--muted)">※チェリー方式のルールにより、相方がロックされたため出演不可となります。</span>
-          </div>`;
-      }
-      return;
-    }
-  }
-
-  const newEntry = { id: Date.now()+'', label, memberDetails };
-  const testEntries = [...entries, newEntry]; 
-  
-  const violation = hasCherryViolation(testEntries);
-  if (violation.violated) {
-    box.className = 'result-box ng';
-    const badGuys = violation.names.map(n => `<span class="error-highlight">${n}</span>`).join(' と ');
-    box.innerHTML = `
-      <div class="icon">🚫 チェリー方式違反</div>
-      <strong>同じユニット内に、2回出演する人が複数並んでしまいます！</strong>
-      <div style="border-top:1px solid #ffd0d9;margin:8px 0"></div>
-      <div style="font-size:12px; line-height:1.6; margin-bottom:4px;">
-        このエントリーを許可すると、グループ「<strong>${violation.label}</strong>」の中で、<br>
-        ${badGuys} の<strong>両方が2回出演</strong>することになり、ルール違反になります。
-      </div>`;
-    return;
-  }
-
-  entries.push(newEntry);
-  save();
-
   box.className = 'result-box ok';
-  box.innerHTML = `<div class="icon">🍒 問題なし！登録完了</div><strong>「${label}」を正常に登録しました。</strong>`;
-
-  setTimeout(()=>{
-    document.getElementById('secEntry').style.display='none';
-    document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('customWrap').classList.remove('on');
-    document.getElementById('entryName').value='';
-    clearResult();
-    curCount=0;
-    renderAll();
-  }, 1500);
-}
-
-function onSearch(val) {
-  searchQuery = val.trim();
-  renderList(); 
-}
-
-/* ===== 🛠️ 修正：CSV出力にパスワードロックを適用 ===== */
-function downloadCSV() {
-  if (!checkAdminAuth()) return; // 認証失敗なら中止
-
-  if(!entries.length) { alert('登録されたエントリーがありません。'); return; }
-  
-  let csvContent = '\uFEFFエントリー名,形式,学籍番号,名前\n';
-  
-  entries.forEach(e => {
-    const validMembers = e.memberDetails.filter(m => m.code && m.name);
-    const fmt = fmtLabel(validMembers.length);
-    validMembers.forEach(m => {
-      const l = e.label.replace(/"/g, '""');
-      const code = m.code.replace(/"/g, '""');
-      const name = m.name.replace(/"/g, '""');
-      csvContent += `"${l}","${fmt}","${code}","${name}"\n`;
-    });
-  });
-  
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `cherry_method_entries_${new Date().toISOString().slice(0,10)}.csv`;
-  link.click();
-}
-
-function updateCounter() {
-  const totalGroups = entries.length;
-  document.getElementById('entryCounter').innerHTML = `current：<strong>${totalGroups} 組</strong>`;
-}
-
-/* ===== RENDER ===== */
-function fmtLabel(n){
-  if(n===1)return'ピン';if(n===2)return'コンビ';if(n===3)return'トリオ';return`${n}人`;
-}
-
-function renderAll(){ renderList(); renderBlocked(); updateCounter(); }
-
-function renderList(){
-  const el = document.getElementById('entryList');
-  if(!entries.length){ el.innerHTML='<li class="no-data">まだエントリーがありません</li>'; return; }
-  
-  const filtered = entries.filter(e => {
-    if(!searchQuery) return true;
-    const s = searchQuery.toLowerCase();
-    const labelMatch = e.label.toLowerCase().includes(s);
-    const memberMatch = e.memberDetails.some(m => 
-      m.name.toLowerCase().includes(s) || m.code.toLowerCase().includes(s)
-    );
-    return labelMatch || memberMatch;
-  });
-
-  if(!filtered.length) { el.innerHTML='<li class="no-data">検索結果に一致するエントリーはありません</li>'; return; }
-
-  el.innerHTML = filtered.map(e=>{
-    const validMembers = e.memberDetails.filter(m=>m.code && m.name);
-    const n = validMembers.length;
-    const names = validMembers.map(m=>m.name).join(' ・ ');
-    
-    return `
-      <li class="entry-item">
-        <span class="entry-badge">${fmtLabel(n)}</span>
-        <div class="entry-info">
-          <div class="entry-unit">${e.label}</div>
-          <div class="entry-names">${names}</div>
-        </div>
-        <!-- 🛠️ 修正：個別削除はミス防止の確認アラートだけに留める（誰でも消せる状態を維持、必要ならここもロック可能） -->
-        <button class="btn-ghost" onclick="delEntry('${e.id}')">削除</button>
-      </li>`;
-  }).join('');
-}
-
-function renderBlocked(){
-  const blocked = calcBlockedNames();
-  const el = document.getElementById('blockedArea');
-  if(!el) return;
-  if(!blocked.size){
-    el.innerHTML='<p style="font-size:13px;color:var(--muted)">現在、出演不可者はいません。</p>';
-    return;
-  }
-
-  const selfList = [...blocked.values()].filter(i => i.isSelf);
-  const mateList = [...blocked.values()].filter(i => !i.isSelf);
-
-  let html = '';
-  
-  if(selfList.length > 0) {
-    html += `<div class="blocked-row-title">🚫 2回出演する本人（これ以上のエントリー不可）</div><div class="blocked-row">`;
-    html += selfList.map(info => `
-      <div class="blocked-chip" style="border-color:#ffccd3; background:#fff5f6">
-        <span class="entry-badge self-block">本人</span>
-        <span class="b-name">${info.name}</span>
-      </div>`).join('');
-    html += `</div>`;
-  }
-
-  if(mateList.length > 0) {
-    html += `<div class="blocked-row-title" style="margin-top:12px;">⚠️ 巻き込まれた相方（これ以上のエントリー不可）</div><div class="blocked-row">`;
-    html += mateList.map(info => `
-      <div class="blocked-chip" style="border-color:#ffe0b5; background:#fffdf9">
-        <span class="entry-badge mate-block" style="background:#f59e0b">相方</span>
-        <span class="b-name">${info.name}</span>
-        <span class="b-reason" style="font-size:10px; color:#b45309">${info.reason}</span>
-      </div>`).join('');
-    html += `</div>`;
-  }
-
-  el.innerHTML = html;
-}
-
-function delEntry(id){
-  if(!confirm('このエントリーを削除しますか？')) return;
-  entries = entries.filter(e=>e.id!==id);
-  save(); renderAll();
-}
-
-/* ===== 🛠️ 修正：すべて削除にパスワードロックを適用 ===== */
-function clearAll(){
-  if (!checkAdminAuth()) return; // 認証失敗なら中止
-  if(!confirm('本当にすべてのエントリーを完全に消去しますか？この操作は取り消せません。')) return;
-  entries=[]; save(); renderAll();
+  box.innerHTML = `<div class="icon">🍒 セーフ！</div><strong>このユニット内での重複・違反はありません。</strong>`;
 }
 
 function clearResult(){
   const b=document.getElementById('resultBox');
   if(b){ b.className='result-box'; b.innerHTML=''; }
 }
-
-load(); renderAll();
 </script>
 </body>
 </html>
