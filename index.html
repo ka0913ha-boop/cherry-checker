@@ -145,7 +145,7 @@ h1{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text)}
 
 <div id="cPromptModal" class="c-modal-overlay">
   <div class="c-modal-box">
-    <div class="c-modal-title">🔒 管理者認証</div>
+    <div class="c-modal-title" id="cPromptTitle">🔒 管理者認証</div>
     <div class="c-modal-msg" id="cPromptMsg">パスワードを入力してください</div>
     <input type="password" class="c-modal-input" id="cPromptInput" placeholder="パスワード">
     <div class="c-modal-btn-row">
@@ -311,7 +311,10 @@ function onSearch(val) { searchQuery = val.trim(); renderList(); }
 
 // 🔒 パスワード入力画面（CSV・全削除 共通）を開く関数
 function openPasswordModal(type) {
+  document.getElementById('cPromptTitle').innerText = '🔒 管理者認証';
   document.getElementById('cPromptInput').value = '';
+  document.getElementById('cPromptInput').type = 'password';
+  document.getElementById('cPromptInput').placeholder = 'パスワード';
   document.getElementById('cPromptModal').style.display = 'flex';
   
   if (type === 'csv') {
@@ -377,17 +380,36 @@ function renderBlocked(){
   el.innerHTML = html;
 }
 
-// 🗑️ 通常削除の確認ポップアップを開く
+// 🗑️ 個別削除の学籍番号認証ポップアップを開く
 function askDelEntry(id, label) {
   pendingDeleteId = id;
-  document.getElementById('cConfirmMsg').innerText = `エントリー「${label}」を\n削除してもよろしいですか？`;
-  document.getElementById('cConfirmModal').style.display = 'flex';
-  document.getElementById('cConfirmYesBtn').onclick = function() { executeSingleDelete(); };
+  document.getElementById('cPromptTitle').innerText = '👤 本人認証';
+  document.getElementById('cPromptMsg').innerText = `【エントリー削除：${label}】\n出演者の「学籍番号」を入力してください：`;
+  document.getElementById('cPromptInput').value = '';
+  document.getElementById('cPromptInput').type = 'text'; // 学籍番号が見えるようにtextに
+  document.getElementById('cPromptInput').placeholder = '学籍番号を入力';
+  document.getElementById('cPromptModal').style.display = 'flex';
+  document.getElementById('cPromptSubmitBtn').onclick = function() { executeSingleDelete(); };
 }
 
 // 実際の通常削除
 function executeSingleDelete() {
-  closeCModal('cConfirmModal');
+  const inputCode = document.getElementById('cPromptInput').value.trim();
+  closeCModal('cPromptModal');
+
+  // 対象のエントリーを探す
+  const targetEntry = entries.find(e => e.id === pendingDeleteId);
+  if (!targetEntry) return;
+
+  // 入力された学籍番号がメンバーの中に存在するかチェック
+  const isValidMember = targetEntry.memberDetails.some(m => m.code === inputCode);
+
+  if (!isValidMember) {
+    customAlert('❌ 認証エラー', '入力された学籍番号はこのエントリーの出演者と一致しません。');
+    return;
+  }
+
+  // 削除実行
   entries = entries.filter(e => e.id !== pendingDeleteId);
   saveLocal();
   renderAll();
